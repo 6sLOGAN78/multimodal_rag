@@ -1,0 +1,13 @@
+pyyaml
+python-box
+ensure
+joblib
+pymupdf
+python-docx
+pillow            
+langchain
+langchain-text-splitters
+numpy
+torch
+faiss-cpu
+-e .

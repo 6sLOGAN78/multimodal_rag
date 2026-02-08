@@ -1,0 +1,28 @@
+paths:
+  data_dir: data
+  docs_dir: data/docs
+  images_dir: data/images
+  index_dir: index
+
+embedding:
+  model: ViT-B-32
+  pretrained: laion2b_s34b_b79k
+  dim: 512
+  device: cpu
+
+chunking:
+  chunk_type: recursive_character   # page | recursive_character 
+  chunk_page_size: 1 # 1|2
+  chunk_size: 2000
+  chunk_overlap: 200
+
+retrieval:
+  top_k: 5
+  metric: l2    # l2 | cosine
+
+
+llm:
+  provider: openai  # openai | anthropic | google
+  model: gemini-2.0-flash
+  temperature: 0.2
+  max_tokens: 512

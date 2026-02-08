@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual env
+venv/
+.env/
+rag
+# Logs
+logs/
+*.log
+
+# Packaging
+*.egg-info/
+dist/
+build/
+
+# OS
+.DS_Store
+.vscode
