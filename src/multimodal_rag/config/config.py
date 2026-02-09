@@ -33,6 +33,14 @@ class EmbeddingConfig:
 
 
 @dataclass(frozen=True)
+class ImageEmbeddingConfig:
+    model: str
+    pretrained: str
+    dim: int
+    device: str
+
+
+@dataclass(frozen=True)
 class ChunkingConfig:
     chunk_size: int
     chunk_overlap: int
@@ -59,6 +67,7 @@ class Settings:
     paths: PathsConfig
     indexing: IndexingConfig
     embedding: EmbeddingConfig
+    image_embedding: ImageEmbeddingConfig
     chunking: ChunkingConfig
     retrieval: RetrievalConfig
     llm: LLMConfig
@@ -98,12 +107,20 @@ def load_settings() -> Settings:
     indexing.text.mkdir(parents=True, exist_ok=True)
     indexing.image_text.mkdir(parents=True, exist_ok=True)
 
-    # ---- Embedding ----
+    # ---- Text Embedding ----
     embedding = EmbeddingConfig(
         model=cfg.embedding.model,
         pretrained=cfg.embedding.pretrained,
         dim=int(cfg.embedding.dim),
         device=cfg.embedding.device,
+    )
+
+    # ---- Image Embedding ----
+    image_embedding = ImageEmbeddingConfig(
+        model=cfg.image_embedding.model,
+        pretrained=cfg.image_embedding.pretrained,
+        dim=int(cfg.image_embedding.dim),
+        device=cfg.image_embedding.device,
     )
 
     # ---- Chunking ----
@@ -139,6 +156,7 @@ def load_settings() -> Settings:
         paths=paths,
         indexing=indexing,
         embedding=embedding,
+        image_embedding=image_embedding,
         chunking=chunking,
         retrieval=retrieval,
         llm=llm,

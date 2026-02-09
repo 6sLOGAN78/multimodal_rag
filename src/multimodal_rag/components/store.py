@@ -1,15 +1,8 @@
 from typing import List, Dict, Any
-
 import chromadb
 from chromadb.api.models.Collection import Collection
-
 from multimodal_rag.config.config import settings
 from multimodal_rag.logger import logger
-
-
-# --------------------------------------------------
-# Chroma Client & Collection
-# --------------------------------------------------
 def get_chroma_collection(
     collection_name: str = "multimodal_embeddings",
 ) -> Collection:

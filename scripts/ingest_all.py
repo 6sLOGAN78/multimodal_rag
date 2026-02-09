@@ -3,7 +3,7 @@ from datetime import datetime
 from pathlib import Path
 
 from multimodal_rag.components.ingest import ingest_documents
-from multimodal_rag.components.embed import TextEmbedder
+from multimodal_rag.components.embed_text import TextEmbedder
 from multimodal_rag.components.store import store_in_chroma
 from multimodal_rag.config.config import settings
 from multimodal_rag.logger import logger

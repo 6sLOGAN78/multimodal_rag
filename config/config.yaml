@@ -8,6 +8,7 @@ indexing:
   image: index/image
   text: index/text
   image_text: index/image_text
+  
 
 embedding:
   model: e5
@@ -15,20 +16,24 @@ embedding:
   dim: 1024
   device: cpu
 
+image_embedding:
+  model: clip
+  pretrained: ViT-H-14
+  dim: 1024
+  device: cpu
 
 chunking:
-  chunk_type: page  # page | recursive_character 
-  chunk_page_size: 1 # 1|2
+  chunk_type: page
+  chunk_page_size: 1
   chunk_size: 2000
   chunk_overlap: 200
 
 retrieval:
   top_k: 5
-  metric: l2    # l2 | cosine
-
+  metric: cosine
 
 llm:
-  provider: openai  # openai | anthropic | google
+  provider: openai
   model: gemini-2.0-flash
   temperature: 0.2
   max_tokens: 512
