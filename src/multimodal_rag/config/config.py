@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from pathlib import Path
 import os
-from utils.common import read_yaml
-from logger import logger
+from multimodal_rag.utils.common import read_yaml
+from multimodal_rag.logger import logger
 
 @dataclass(frozen=True)
 class PathsConfig:
@@ -53,8 +53,10 @@ class Settings:
 
 def load_settings() -> Settings:
     
-    base_dir = Path(__file__).resolve().parent.parent.parent
-    config_path = base_dir / "config/config.yaml"
+    base_dir = Path(__file__).resolve().parent.parent.parent.parent
+
+    config_path = base_dir / "config" / "config.yaml"
+
 
     cfg = read_yaml(config_path)
 

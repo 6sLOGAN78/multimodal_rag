@@ -4,14 +4,16 @@ paths:
   images_dir: data/images
   index_dir: index
 
+
 embedding:
-  model: ViT-B-32
-  pretrained: laion2b_s34b_b79k
-  dim: 512
+  model: e5
+  pretrained: intfloat/e5-large-v2
+  dim: 1024
   device: cpu
 
+
 chunking:
-  chunk_type: recursive_character   # page | recursive_character 
+  chunk_type: page  # page | recursive_character 
   chunk_page_size: 1 # 1|2
   chunk_size: 2000
   chunk_overlap: 200
