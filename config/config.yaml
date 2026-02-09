@@ -5,11 +5,12 @@ paths:
   index_dir: index
 
 indexing:
-  image: index/image
-  text: index/text
-  image_text: index/image_text
+  image: index/image  #only image
+  image_pdfimage: index/image_pdfimage  #images + pdf images
+  pdf_image: index/pdf_image     # only pdf images
+  text: index/text                # only text
+  image_text: index/image_text    # both text and images, but text is chunked and embedded separately from images
   
-
 embedding:
   model: e5
   pretrained: intfloat/e5-large-v2

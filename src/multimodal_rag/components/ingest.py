@@ -9,20 +9,11 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 from multimodal_rag.logger import logger
 from multimodal_rag.config.config import settings
-
-
-# --------------------------------------------------
-# Constants
-# --------------------------------------------------
 TEXT_EXTENSIONS = {".txt", ".md"}
 PDF_EXTENSION = ".pdf"
 DOCX_EXTENSION = ".docx"
 IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
 
-
-# --------------------------------------------------
-# Text Splitter (used everywhere except PDF page mode)
-# --------------------------------------------------
 def get_text_splitter() -> RecursiveCharacterTextSplitter:
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=settings.chunking.chunk_size,

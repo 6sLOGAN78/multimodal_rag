@@ -19,9 +19,11 @@ class PathsConfig:
 
 @dataclass(frozen=True)
 class IndexingConfig:
-    image: Path
-    text: Path
-    image_text: Path
+    image: Path            # only normal images
+    image_pdfimage: Path   # normal images + pdf images
+    pdf_image: Path        # only pdf images
+    text: Path             # only text
+    image_text: Path       # multimodal (text + image)
 
 
 @dataclass(frozen=True)
@@ -99,15 +101,18 @@ def load_settings() -> Settings:
     # ---- Indexing ----
     indexing = IndexingConfig(
         image=base_dir / cfg.indexing.image,
+        image_pdfimage=base_dir / cfg.indexing.image_pdfimage,
+        pdf_image=base_dir / cfg.indexing.pdf_image,
         text=base_dir / cfg.indexing.text,
         image_text=base_dir / cfg.indexing.image_text,
     )
 
     indexing.image.mkdir(parents=True, exist_ok=True)
+    indexing.image_pdfimage.mkdir(parents=True, exist_ok=True)
+    indexing.pdf_image.mkdir(parents=True, exist_ok=True)
     indexing.text.mkdir(parents=True, exist_ok=True)
     indexing.image_text.mkdir(parents=True, exist_ok=True)
 
-    # ---- Text Embedding ----
     embedding = EmbeddingConfig(
         model=cfg.embedding.model,
         pretrained=cfg.embedding.pretrained,
@@ -115,7 +120,6 @@ def load_settings() -> Settings:
         device=cfg.embedding.device,
     )
 
-    # ---- Image Embedding ----
     image_embedding = ImageEmbeddingConfig(
         model=cfg.image_embedding.model,
         pretrained=cfg.image_embedding.pretrained,
@@ -123,21 +127,17 @@ def load_settings() -> Settings:
         device=cfg.image_embedding.device,
     )
 
-    # ---- Chunking ----
     chunking = ChunkingConfig(
         chunk_size=int(cfg.chunking.chunk_size),
         chunk_overlap=int(cfg.chunking.chunk_overlap),
         chunk_type=cfg.chunking.chunk_type,
         chunk_page_size=int(cfg.chunking.chunk_page_size),
     )
-
-    # ---- Retrieval ----
     retrieval = RetrievalConfig(
         top_k=int(cfg.retrieval.top_k),
         metric=cfg.retrieval.metric,
     )
 
-    # ---- LLM ----
     llm = LLMConfig(
         provider=cfg.llm.provider,
         model=cfg.llm.model,
@@ -145,7 +145,6 @@ def load_settings() -> Settings:
         max_tokens=int(cfg.llm.max_tokens),
     )
 
-    # ---- API key ----
     gemini_api_key = os.getenv("GEMINI_API_KEY")
     if llm.provider == "gemini" and not gemini_api_key:
         raise EnvironmentError("GEMINI_API_KEY is not set")
