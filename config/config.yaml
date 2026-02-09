@@ -4,6 +4,10 @@ paths:
   images_dir: data/images
   index_dir: index
 
+indexing:
+  image: index/image
+  text: index/text
+  image_text: index/image_text
 
 embedding:
   model: e5

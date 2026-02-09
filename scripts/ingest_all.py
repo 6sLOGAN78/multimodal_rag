@@ -4,16 +4,13 @@ from pathlib import Path
 
 from multimodal_rag.components.ingest import ingest_documents
 from multimodal_rag.components.embed import TextEmbedder
+from multimodal_rag.components.store import store_in_chroma
 from multimodal_rag.config.config import settings
 from multimodal_rag.logger import logger
 
 
 def main():
     logger.info("===== CHECK INGEST + EMBED PIPELINE =====")
-
-    # --------------------------------------------------
-    # Output file
-    # --------------------------------------------------
     out_dir = Path("debug_outputs")
     out_dir.mkdir(exist_ok=True)
     out_file = out_dir / f"ingest_embed_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
@@ -23,10 +20,6 @@ def main():
             f.write(line + "\n")
 
     write("===== INGEST + EMBED FULL REPORT =====\n")
-
-    # --------------------------------------------------
-    # 1. INGEST
-    # --------------------------------------------------
     data = ingest_documents(
         docs_dir=settings.paths.docs_dir,
         images_dir=settings.paths.images_dir,
@@ -47,9 +40,6 @@ def main():
             f"source={chunk['source']}"
         )
 
-    # --------------------------------------------------
-    # 2. EMBED
-    # --------------------------------------------------
     embedder = TextEmbedder()
     embeddings, metadatas = embedder.embed_texts(text_chunks)
 
@@ -59,9 +49,6 @@ def main():
 
     logger.info(f"Embeddings shape: {embeddings.shape}")
 
-    # --------------------------------------------------
-    # 3. WINDOW DISTRIBUTION
-    # --------------------------------------------------
     page_to_windows = defaultdict(int)
 
     for meta in metadatas:
@@ -75,10 +62,6 @@ def main():
     write("\n----- WINDOW DISTRIBUTION PER PAGE / CHUNK -----")
     for (src, page), count in page_to_windows.items():
         write(f"source={src} | page/chunk={page} | windows={count}")
-
-    # --------------------------------------------------
-    # 4. FULL METADATA DUMP
-    # --------------------------------------------------
     write("\n----- FULL EMBEDDING METADATA -----")
     for i, meta in enumerate(metadatas):
         write(
@@ -91,9 +74,28 @@ def main():
             f"source={meta.get('source')}"
         )
 
-    # --------------------------------------------------
-    # 5. FINAL CONSISTENCY CHECKS
-    # --------------------------------------------------
+    logger.info("===== STORING EMBEDDINGS IN CHROMADB =====")
+
+    ids = [
+        f"{meta['source']}::chunk_{meta.get('chunk_id')}::window_{meta.get('window_id')}"
+        for meta in metadatas
+    ]
+
+    documents = []
+    for meta in metadatas:
+
+        chunk_id = meta.get("chunk_id")
+        documents.append(text_chunks[chunk_id]["content"])
+
+    store_in_chroma(
+        ids=ids,
+        embeddings=embeddings.tolist(),
+        metadatas=metadatas,
+        documents=documents,
+    )
+
+    write("\n===== STORED IN CHROMADB =====")
+
     assert embeddings.ndim == 2, "Embeddings must be 2D"
     assert embeddings.shape[1] == settings.embedding.dim, (
         f"Embedding dim mismatch: expected {settings.embedding.dim}"
@@ -105,6 +107,7 @@ def main():
     write("\n===== ALL CHECKS PASSED =====")
     logger.info("===== ALL CHECKS PASSED =====")
     logger.info(f"Detailed report saved to: {out_file}")
+    logger.info("Embeddings successfully stored in ChromaDB")
 
 
 if __name__ == "__main__":
