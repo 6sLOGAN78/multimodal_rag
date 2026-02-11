@@ -180,11 +180,6 @@ def main():
             f"[IMAGE_PDFIMAGE] vectors={len(combined_embeddings)} "
             f"dim={combined_embeddings[0].shape[0]}"
         )
-
-    # ---------------------------------------------
-    # FINAL
-    # ---------------------------------------------
-    write("\n===== ALL CHECKS PASSED =====")
     logger.info("===== PIPELINE COMPLETED SUCCESSFULLY =====")
     logger.info(f"Report saved to: {report_file}")
 

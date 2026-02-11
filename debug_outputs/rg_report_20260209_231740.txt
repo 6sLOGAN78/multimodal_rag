@@ -1,0 +1,9 @@
+===== MULTIMODAL RAG PIPELINE REPORT =====
+
+Text chunks: 17
+PDF images: 24
+Normal images: 0
+
+[TEXT] vectors=32 dim=1024
+[PDF_IMAGE] vectors=24 dim=1024
+[IMAGE_PDFIMAGE] vectors=24 dim=1024
